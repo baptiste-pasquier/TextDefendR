@@ -15,7 +15,7 @@
   - [2.3. TCAB Benchmark](#23-tcab-benchmark)
     - [2.3.1. Generate the whole dataset](#231-generate-the-whole-dataset)
     - [2.3.2. Encode the dataset with feature extraction](#232-encode-the-dataset-with-feature-extraction)
-
+    - [2.3.3. Compile the joblib features in a dataframe](#233-compile-the-joblib-features-in-a-dataframe)
 
 ## 1. Installation
 
@@ -102,26 +102,26 @@ python scripts/attack.py
 ```
 usage: attack.py [-h] [--dir_dataset DIR_DATASET] [--dir_out DIR_OUT]
                  [--task_name TASK_NAME] [--model_name MODEL_NAME]
-                 [--pretrained_model_name_or_path PRETRAINED_MODEL_NAME_OR_PATH]  
+                 [--pretrained_model_name_or_path PRETRAINED_MODEL_NAME_OR_PATH]
                  [--model_max_seq_len MODEL_MAX_SEQ_LEN]
-                 [--model_batch_size MODEL_BATCH_SIZE] [--dataset_name DATASET_NAME]  
+                 [--model_batch_size MODEL_BATCH_SIZE] [--dataset_name DATASET_NAME]
                  [--target_model_train_dataset TARGET_MODEL_TRAIN_DATASET]
-                 [--attack_toolchain ATTACK_TOOLCHAIN] [--attack_name ATTACK_NAME]  
+                 [--attack_toolchain ATTACK_TOOLCHAIN] [--attack_name ATTACK_NAME]
                  [--attack_query_budget ATTACK_QUERY_BUDGET]
-                 [--attack_n_samples ATTACK_N_SAMPLES] [--random_seed RANDOM_SEED]  
+                 [--attack_n_samples ATTACK_N_SAMPLES] [--random_seed RANDOM_SEED]
 
 options:
   -h, --help            show this help message and exit
   --dir_dataset DIR_DATASET
-                        Central directory for storing datasets. (default: data/)  
-  --dir_out DIR_OUT     Central directory for storing attacks. (default: attacks/)  
+                        Central directory for storing datasets. (default: data/)
+  --dir_out DIR_OUT     Central directory for storing attacks. (default: attacks/)
   --task_name TASK_NAME
-                        e.g., abuse, sentiment or fake_news. (default: sentiment)  
+                        e.g., abuse, sentiment or fake_news. (default: sentiment)
   --model_name MODEL_NAME
                         Model type. (default: distilcamembert)
   --pretrained_model_name_or_path PRETRAINED_MODEL_NAME_OR_PATH
-                        Fine-tuned model configuration to load from cache or download  
-                        (HuggingFace). (default: baptiste-pasquier/distilcamembert-  
+                        Fine-tuned model configuration to load from cache or download
+                        (HuggingFace). (default: baptiste-pasquier/distilcamembert-
                         allocine)
   --model_max_seq_len MODEL_MAX_SEQ_LEN
                         Max. no. tokens per string. (default: 512)
@@ -130,16 +130,16 @@ options:
   --dataset_name DATASET_NAME
                         Dataset to attack. (default: allocine)
   --target_model_train_dataset TARGET_MODEL_TRAIN_DATASET
-                        Dataset used to train the target model. (default: allocine)  
+                        Dataset used to train the target model. (default: allocine)
   --attack_toolchain ATTACK_TOOLCHAIN
                         e.g., textattack or none. (default: textattack)
   --attack_name ATTACK_NAME
-                        Name of the attack; clean = no attack. (default: deepwordbug)  
+                        Name of the attack; clean = no attack. (default: deepwordbug)
   --attack_query_budget ATTACK_QUERY_BUDGET
-                        Max. no. of model queries per attack; 0 = infinite budget.  
+                        Max. no. of model queries per attack; 0 = infinite budget.
                         (default: 0)
   --attack_n_samples ATTACK_N_SAMPLES
-                        No. samples to attack; 0 = attack all samples. (default: 10)  
+                        No. samples to attack; 0 = attack all samples. (default: 10)
   --random_seed RANDOM_SEED
                         Random seed value to use for reproducibility. (default: 0)
 ```
@@ -176,7 +176,7 @@ usage: encode_main.py [-h] [--target_model TARGET_MODEL]
                       [--target_model_dataset TARGET_MODEL_DATASET]
                       [--target_model_train_dataset TARGET_MODEL_TRAIN_DATASET]
                       [--attack_name ATTACK_NAME]
-                      [--max_clean_instance MAX_CLEAN_INSTANCE] [--tp_model TP_MODEL]  
+                      [--max_clean_instance MAX_CLEAN_INSTANCE] [--tp_model TP_MODEL]
                       [--lm_perplexity_model LM_PERPLEXITY_MODEL]
                       [--lm_proba_model LM_PROBA_MODEL]
                       [--target_model_name_or_path TARGET_MODEL_NAME_OR_PATH]
@@ -189,25 +189,25 @@ options:
   --target_model_dataset TARGET_MODEL_DATASET
                         Dataset attacked. (default: allocine)
   --target_model_train_dataset TARGET_MODEL_TRAIN_DATASET
-                        Dataset used to train the target model. (default: allocine)  
+                        Dataset used to train the target model. (default: allocine)
   --attack_name ATTACK_NAME
-                        Name of the attack or ALL or ALLBUTCLEAN. (default: ALL)  
+                        Name of the attack or ALL or ALLBUTCLEAN. (default: ALL)
   --max_clean_instance MAX_CLEAN_INSTANCE
-                        Only consider certain number of clean instances; 0 = consider  
+                        Only consider certain number of clean instances; 0 = consider
                         all. (default: 0)
   --tp_model TP_MODEL   Sentence embeddings model for text properties features.
-                        (default: sentence-transformers/bert-base-nli-mean-tokens)  
+                        (default: sentence-transformers/bert-base-nli-mean-tokens)
   --lm_perplexity_model LM_PERPLEXITY_MODEL
                         GPT2 model for lm perplexity features. (e.g. gpt2,
-                        gpt2-medium, gpt2-large, gpt2-xl, distilgpt2) (default: gpt2)  
+                        gpt2-medium, gpt2-large, gpt2-xl, distilgpt2) (default: gpt2)
   --lm_proba_model LM_PROBA_MODEL
-                        Roberta model for lm proba features. (e.g. roberta-base,  
-                        roberta-large, distilroberta-base) (default: roberta-base)  
+                        Roberta model for lm proba features. (e.g. roberta-base,
+                        roberta-large, distilroberta-base) (default: roberta-base)
   --target_model_name_or_path TARGET_MODEL_NAME_OR_PATH
                         Fine-tuned target model to load from cache or download
-                        (HuggingFace). (default: baptiste-pasquier/distilcamembert-  
+                        (HuggingFace). (default: baptiste-pasquier/distilcamembert-
                         allocine)
-  --test TEST           If True only computes first 10 instance. (default: False)  
+  --test TEST           If True only computes first 10 instance. (default: False)
   --disable_tqdm DISABLE_TQDM
                         If True silent tqdm progress bar. (default: False)
 ```
@@ -217,3 +217,33 @@ options:
 :bulb: Notebook step-by-step for encode_samplewise_features: [encode_samplewise_features.ipynb](/notebooks/encode_samplewise_features.ipynb)
 
 :bulb: Notebook for feature extraction: [feature_extraction.ipynb](/notebooks/feature_extraction.ipynb)
+
+
+#### 2.3.3. Compile the joblib features in a dataframe
+
+Run
+
+```{bash}
+python scripts/generate_feature_dataset.py
+```
+
+:memo: Usage
+
+```{bash}
+Usage: generate_feature_dataset.py [OPTIONS]
+
+  Generate the dataframe from the joblib file
+
+Options:
+  --joblib_path TEXT  Path to the joblib file
+                      (default: data_tcab/reprs/samplewise/fr+small_distilcamembert_allocine_ALL.joblib)
+  --use_canine        Add CANINE features to the dataframe
+                      (default: False)
+  --canine_path TEXT  Path to the canine joblib file
+                      (default: data_tcab/reprs/samplewise/fr+canine_distilcamembert_allocine_ALL_TP.joblib)
+  --disable_tqdm      Disable tqdm progress bar
+                      (default: False)
+  --help              Show this message and exit.
+```
+
+:bulb: Notebook step-by-step: [create_feature_dataframe.ipynb](/notebooks/create_feature_dataframe.ipynb)

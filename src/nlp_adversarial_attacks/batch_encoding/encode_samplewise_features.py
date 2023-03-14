@@ -342,11 +342,11 @@ def encode_all_properties(
             pass
         else:
             keys_to_rm.append(h)
-    _failed_extraction_count = 0
-    for _failed_extraction_count, k in enumerate(keys_to_rm):
-        del holder[k]
+    # _failed_extraction_count = 0
+    # for _failed_extraction_count, k in enumerate(keys_to_rm):
+    #     del holder[k]
 
-    print("total failed extraction: ", _failed_extraction_count, "out of", len(holder))
+    print("total failed extraction: ", len(keys_to_rm), "out of", len(holder))
     print("a sample holder value for sanity check")
     print()
     print()
