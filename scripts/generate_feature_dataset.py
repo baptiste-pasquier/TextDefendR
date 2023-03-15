@@ -7,6 +7,8 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
+from nlp_adversarial_attacks.reactdetect.utils.magic_vars import PRIMARY_KEY_FIELDS
+
 
 def vars_values_for_a_line(holder, i, variables, len_sub_variables):
     if not holder[i]["deliverable"]:
@@ -41,16 +43,7 @@ def generate_vars_df(holder, disable_tqdm=False):
 def generate_index_df(holder):
     unique_id = np.array([holder[i]["unique_id"] for i in holder]).reshape(-1, 1)
     primary_key = np.array([holder[i]["primary_key"] for i in holder])
-    index = [
-        "unique_id",
-        "attack_name",
-        "attack_toolchain",
-        "attack_id",
-        "scenario",
-        "target_model",
-        "target_model_dataset",
-        "attack_id_bis",
-    ]
+    index = ["unique_id"] + PRIMARY_KEY_FIELDS
     df_values = np.hstack([unique_id, primary_key])
     index_df = pd.DataFrame(df_values, columns=index)
     return index_df
@@ -68,7 +61,7 @@ def get_df_from_holder(holder, disable_tqdm=False):
 @click.option(
     "--joblib_path",
     type=str,
-    default="data_tcab/reprs/samplewise/fr+small_distilcamembert_allocine_ALL.joblib",
+    default="data_tcab/reprs/samplewise/fr+small_distilcamembert_allocine_ALL_ALL.joblib",
     help="Path to the joblib file",
     show_default=True,
 )
@@ -98,7 +91,8 @@ def get_df_from_holder(holder, disable_tqdm=False):
 def main(joblib_path, use_canine, canine_path, disable_tqdm):
     start = time.time()
     print("--- loading holder")
-    holder = joblib.load(joblib_path)
+    with open(joblib_path, "rb") as f:
+        holder = joblib.load(f)
     print()
 
     print("--- generating dataframe from holder")
