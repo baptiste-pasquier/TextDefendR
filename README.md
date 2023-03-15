@@ -212,6 +212,35 @@ options:
                         If True silent tqdm progress bar. (default: False)
 ```
 
+For instance, to use the `distilcamembert` model trained on the `allocine` dataset as the target model, a version of distilcamembert for the tp and lm probabilities, and a French implementation of GPT2 for the perplexity (those are the default values), run
+
+```{bash}
+python scripts/encode_main.py \
+    --target_model distilcamembert \
+    --target_model_train_dataset allocine \
+    --attack_name 0 \
+    --max_clean_instance 0 \
+    --tp_model cmarkea/distilcamembert-base-nli \
+    --lm_perplexity_model asi/gpt-fr-cased-small \
+    --lm_proba_model cmarkea/distilcamembert-base \
+    --target_model_name_or_path baptiste-pasquier/distilcamembert-allocine \
+    --prefix_file_name fr+small \
+    --tasks ALL
+```
+
+This will create the file `data_tcab/reprs/samplewise/fr+small_distilcamembert_allocine_ALL_ALL.joblib`. This command is quite long, around 7 hours for the allocine dataset.
+
+To generate only the tp features, with another model, run
+
+```{bash}
+python scripts/encode_main.py \
+    --tp_model google/canine-c \
+    --prefix_file_name fr+canine \
+    --tasks TP
+```
+
+This will create the file `data_tcab/reprs/samplewise/fr+canine_distilcamembert_allocine_ALL_TP.joblib`. This is quite fast compared to the previous command (around 5 minutes).
+
 :bulb: Notebook step-by-step: [run_encode_main.ipynb](/notebooks/run_encode_main.ipynb)
 
 :bulb: Notebook step-by-step for encode_samplewise_features: [encode_samplewise_features.ipynb](/notebooks/encode_samplewise_features.ipynb)
