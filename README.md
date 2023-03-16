@@ -216,10 +216,6 @@ For instance, to use the `distilcamembert` model trained on the `allocine` datas
 
 ```{bash}
 python scripts/encode_main.py \
-    --target_model distilcamembert \
-    --target_model_train_dataset allocine \
-    --attack_name 0 \
-    --max_clean_instance 0 \
     --tp_model cmarkea/distilcamembert-base-nli \
     --lm_perplexity_model asi/gpt-fr-cased-small \
     --lm_proba_model cmarkea/distilcamembert-base \
